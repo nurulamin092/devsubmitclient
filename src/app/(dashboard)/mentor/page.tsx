@@ -11,6 +11,7 @@ import {
   useListFiltersFromUrl,
   useProjectsList,
 } from "@/features/review/hooks/use-projects-list";
+import { TableSkeleton } from "@/components/common/skeletons";
 
 export default function MentorPage() {
   return (
@@ -68,7 +69,7 @@ function FiltersTableSkeleton() {
   return (
     <div className="space-y-4">
       <Skeleton className="h-10 w-full" />
-      <Skeleton className="h-64 w-full" />
+      <TableSkeleton rows={5} />
     </div>
   );
 }

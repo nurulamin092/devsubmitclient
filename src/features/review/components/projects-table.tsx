@@ -13,8 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/common/empty-state";
+import { TableSkeleton } from "@/components/common/skeletons";
 import { ProjectStatusBadge } from "@/features/projects/components/project-status-badge";
 import { ProjectMobileCard } from "@/features/review/components/project-mobile-card";
 import { ReviewDialog } from "@/features/review/components/review-dialog";
@@ -226,16 +226,6 @@ export function ProjectsTable({
           initialStatus={reviewing.intent}
         />
       )}
-    </div>
-  );
-}
-
-function TableSkeleton() {
-  return (
-    <div className="space-y-2">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Skeleton key={i} className="h-14 w-full" />
-      ))}
     </div>
   );
 }
