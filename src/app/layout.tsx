@@ -6,7 +6,7 @@ import { AuthProvider } from "@/providers/auth-provider";
 import "./globals.css";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "DevSubmit — Project Submission & Review",
