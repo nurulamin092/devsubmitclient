@@ -1,5 +1,6 @@
 export type Role = "STUDENT" | "MENTOR" | "ADMIN";
 export type ProjectStatus = "PENDING" | "APPROVED" | "REJECTED";
+export type ReviewIntent = "APPROVED" | "REJECTED";
 
 export interface User {
   id: string;
