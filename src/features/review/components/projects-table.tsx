@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { FaGithub } from "react-icons/fa";
 import { ExternalLink, Inbox } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -14,7 +14,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/common/empty-state";
 import { ProjectStatusBadge } from "@/features/projects/components/project-status-badge";
+import { ProjectMobileCard } from "@/features/review/components/project-mobile-card";
 import { ReviewDialog } from "@/features/review/components/review-dialog";
 import type { PaginationMeta, Project, ReviewIntent } from "@/types/api";
 
@@ -52,34 +54,47 @@ export function ProjectsTable({
   }
 
   const rows = projects ?? [];
-  const isEmpty = rows.length === 0;
 
-  if (isEmpty) {
+  if (rows.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16 text-center">
-        <Inbox className="mb-3 h-10 w-10 text-muted-foreground" />
-        <p className="font-medium">
-          {hasActiveFilters ? "No matching projects" : "No projects yet"}
-        </p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {hasActiveFilters
+      <EmptyState
+        icon={Inbox}
+        title={hasActiveFilters ? "No matching projects" : "No projects yet"}
+        description={
+          hasActiveFilters
             ? "Try adjusting your filters."
-            : "When students submit projects, they will appear here."}
-        </p>
-      </div>
+            : "When students submit projects, they will appear here."
+        }
+      />
     );
   }
 
+  const openDialog = (project: Project, intent: ReviewIntent) =>
+    setReviewing({ project, intent });
+
   return (
     <div className="space-y-3">
-      <div className="rounded-lg border">
+      {/* Mobile: card list */}
+      <div className="grid gap-3 md:hidden">
+        {rows.map((project) => (
+          <ProjectMobileCard
+            key={project.id}
+            project={project}
+            onApprove={(p) => openDialog(p, "APPROVED")}
+            onReject={(p) => openDialog(p, "REJECTED")}
+          />
+        ))}
+      </div>
+
+      {/* Desktop: table */}
+      <div className="hidden rounded-lg border md:block">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Student</TableHead>
               <TableHead>Project</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="hidden md:table-cell">Submitted</TableHead>
+              <TableHead>Submitted</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -129,7 +144,7 @@ export function ProjectsTable({
                   <TableCell>
                     <ProjectStatusBadge status={project.status} />
                   </TableCell>
-                  <TableCell className="hidden text-sm text-muted-foreground md:table-cell">
+                  <TableCell className="text-sm text-muted-foreground">
                     {formatDistanceToNow(new Date(project.createdAt), {
                       addSuffix: true,
                     })}
@@ -140,9 +155,7 @@ export function ProjectsTable({
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() =>
-                            setReviewing({ project, intent: "APPROVED" })
-                          }
+                          onClick={() => openDialog(project, "APPROVED")}
                         >
                           Approve
                         </Button>
@@ -150,9 +163,7 @@ export function ProjectsTable({
                           size="sm"
                           variant="outline"
                           className="text-destructive hover:text-destructive"
-                          onClick={() =>
-                            setReviewing({ project, intent: "REJECTED" })
-                          }
+                          onClick={() => openDialog(project, "REJECTED")}
                         >
                           Reject
                         </Button>
@@ -173,7 +184,7 @@ export function ProjectsTable({
       </div>
 
       {meta && meta.total > 0 && (
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <div className="flex flex-col items-center justify-between gap-2 text-sm text-muted-foreground sm:flex-row">
           <span>
             Showing{" "}
             <span className="font-medium text-foreground">

@@ -13,6 +13,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/use-auth";
 import { homeRouteForRole } from "@/lib/auth-storage";
+import { ThemeToggle } from "./theme-toggle";
 
 export function DashboardHeader() {
   const { user, logout } = useAuth();
@@ -44,7 +45,7 @@ export function DashboardHeader() {
             <Home className="mr-1 h-4 w-4" />
             Home
           </Button>
-
+          <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
