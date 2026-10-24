@@ -7,7 +7,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -47,7 +46,6 @@ export function DashboardHeader() {
           </Button>
 
           <DropdownMenu>
-            {/* Fix 2: DropdownMenuTrigger – replace asChild with render */}
             <DropdownMenuTrigger
               render={
                 <Button
@@ -65,19 +63,26 @@ export function DashboardHeader() {
               }
             />
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>
-                <div className="flex flex-col">
-                  <span>{user.name}</span>
-                  <span className="text-xs font-normal text-muted-foreground">
-                    {user.email}
-                  </span>
-                </div>
-              </DropdownMenuLabel>
+              {/* Plain div — no Base UI GroupLabel context needed */}
+              <div className="flex flex-col px-2 py-1.5 text-sm">
+                <span className="font-medium">{user.name}</span>
+                <span className="text-xs text-muted-foreground">
+                  {user.email}
+                </span>
+              </div>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => logout()}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Log out
-              </DropdownMenuItem>
+              <DropdownMenuItem
+                render={
+                  <button
+                    type="button"
+                    className="relative flex w-full cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none hover:bg-accent focus:bg-accent"
+                    onClick={() => logout()}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Log out
+                  </button>
+                }
+              />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
